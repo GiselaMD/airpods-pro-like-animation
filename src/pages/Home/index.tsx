@@ -35,7 +35,8 @@ const Home: React.FC = () => {
       let ctx = canvasCtxRef.current;
       ctx!.drawImage(initialImg, 0, 0);
     }
-  }, [initialImg]);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     const updateImage = (index: Number) => {
