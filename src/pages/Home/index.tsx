@@ -1,35 +1,37 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useScroll } from '../../hooks/useScroll';
 
-import { Container, PageId, CanvasWrapper, Canvas } from './styles';
-const FRAME_COUNT = 148;
-const IMG_PATH =
-  'https://www.apple.com/105/media/us/airpods-pro/2019/1299e2f5_9206_4470_b28e_08307a42f19b/anim/sequence/large/01-hero-lightpass/';
+import { Container, CanvasWrapper, Canvas } from './styles';
+
+import { useScroll } from '../../hooks/useScroll';
+import { FRAME_COUNT, IMG_PATH, initialFrame } from './utils';
 
 const Home: React.FC = () => {
-  const initialFrame = `${IMG_PATH}0001.jpg`;
   const initialImg = new Image();
   initialImg.src = initialFrame;
-  const { frameIndex } = useScroll();
+
+  const [frameIndex, setFrameIndex] = useState(0);
+  const { scrollFraction } = useScroll();
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const canvasCtxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
-    // Initialize
-    for (let i = 1; i < FRAME_COUNT; i++) {
+    const allImages = Array.from(
+      new Array(FRAME_COUNT),
+      (_, i) => `${IMG_PATH}${i.toString().padStart(4, '0')}.jpg`
+    );
+    allImages.forEach(src => {
       const img = new Image();
-      img.src = `${IMG_PATH}${i.toString().padStart(4, '0')}.jpg`;
-      console.log('img', img);
-    }
+      img.src = src;
+    });
   }, []);
 
   useEffect(() => {
-    // Initialize
     if (canvasRef.current) {
-      canvasCtxRef.current = canvasRef.current.getContext('2d');
-      canvasRef.current.width = 1158;
-      canvasRef.current.height = 770;
+      const canvas = canvasRef.current;
+      canvasCtxRef.current = canvas.getContext('2d');
+      canvas.width = 1158;
+      canvas.height = 770;
       let ctx = canvasCtxRef.current;
       ctx!.drawImage(initialImg, 0, 0);
     }
@@ -37,17 +39,22 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const updateImage = (index: Number) => {
-      const newImg = new Image();
+      let newImg = new Image();
       newImg.src = `${IMG_PATH}${index.toString().padStart(4, '0')}.jpg`;
       canvasCtxRef.current!.drawImage(newImg, 0, 0);
     };
+
     updateImage(frameIndex);
-    console.log('frameIndex', frameIndex);
   }, [frameIndex]);
+
+  useEffect(() => {
+    setFrameIndex(
+      Math.min(FRAME_COUNT - 1, Math.ceil(scrollFraction * FRAME_COUNT))
+    );
+  }, [scrollFraction]);
 
   return (
     <Container>
-      <PageId>AirPods Pro like Animation!</PageId>
       <CanvasWrapper>
         <Canvas ref={canvasRef}></Canvas>
       </CanvasWrapper>

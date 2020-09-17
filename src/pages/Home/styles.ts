@@ -5,12 +5,6 @@ export const Container = styled.div`
   height: 100vh;
 `;
 
-export const PageId = styled.div`
-  color: ${props => props.theme.colors.primary};
-  font-weight: 500;
-  text-align: center;
-`;
-
 export const CanvasWrapper = styled.div`
   height: 500vh;
 `;

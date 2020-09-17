@@ -1,12 +1,11 @@
 import React from 'react';
 
-import Links from './Links';
-import { Wrapper } from './styles';
+import { Title, Wrapper } from './styles';
 
 const TopNav: React.FC = () => {
   return (
     <Wrapper>
-      <Links />
+      <Title>AirPods Pro like Animation!</Title>
     </Wrapper>
   );
 };

@@ -12,3 +12,8 @@ export const Wrapper = styled.div`
   width: 100%;
   z-index: 2;
 `;
+
+export const Title = styled.h1`
+  margin: 0 auto;
+  color: ${props => props.theme.colors.text};
+`;
