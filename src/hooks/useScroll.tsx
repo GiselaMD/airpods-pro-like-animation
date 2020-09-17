@@ -13,7 +13,7 @@ export const useScroll = () => {
   const onScroll = (e: any) => {
     setScrollTop(document.documentElement.scrollTop);
     setMaxScrollTop(document.documentElement.scrollHeight - window.innerHeight);
-    setScrollFraction(scrollTop / maxScrollTop);
+    setScrollFraction(scrollTop > 0 ? scrollTop / maxScrollTop : 0);
   };
 
   useEffect(() => {

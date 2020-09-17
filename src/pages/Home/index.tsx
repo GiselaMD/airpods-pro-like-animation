@@ -6,9 +6,6 @@ import { useScroll } from '../../hooks/useScroll';
 import { FRAME_COUNT, IMG_PATH, initialFrame } from './utils';
 
 const Home: React.FC = () => {
-  const initialImg = new Image();
-  initialImg.src = initialFrame;
-
   const [frameIndex, setFrameIndex] = useState(0);
   const { scrollFraction } = useScroll();
 
@@ -26,32 +23,40 @@ const Home: React.FC = () => {
     });
   }, []);
 
+  const drawImage = (image: HTMLImageElement) => {
+    canvasCtxRef.current!.drawImage(image, 0, 0);
+  };
+
   useEffect(() => {
     if (canvasRef.current) {
       const canvas = canvasRef.current;
       canvasCtxRef.current = canvas.getContext('2d');
       canvas.width = 1158;
       canvas.height = 770;
-      let ctx = canvasCtxRef.current;
-      ctx!.drawImage(initialImg, 0, 0);
+
+      const initialImg = new Image();
+      initialImg.src = initialFrame;
+      initialImg.onload = () => drawImage(initialImg);
     }
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     const updateImage = (index: Number) => {
-      let newImg = new Image();
+      const newImg = new Image();
       newImg.src = `${IMG_PATH}${index.toString().padStart(4, '0')}.jpg`;
-      canvasCtxRef.current!.drawImage(newImg, 0, 0);
+      newImg.onload = () => drawImage(newImg);
     };
 
     updateImage(frameIndex);
   }, [frameIndex]);
 
   useEffect(() => {
-    setFrameIndex(
-      Math.min(FRAME_COUNT - 1, Math.ceil(scrollFraction * FRAME_COUNT))
+    const newFrameIndex = Math.min(
+      FRAME_COUNT - 1,
+      Math.ceil(scrollFraction * FRAME_COUNT)
     );
+    setFrameIndex(newFrameIndex);
   }, [scrollFraction]);
 
   return (
