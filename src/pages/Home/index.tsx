@@ -35,7 +35,7 @@ const Home: React.FC = () => {
       let ctx = canvasCtxRef.current;
       ctx!.drawImage(initialImg, 0, 0);
     }
-  }, []);
+  }, [initialImg]);
 
   useEffect(() => {
     const updateImage = (index: Number) => {
